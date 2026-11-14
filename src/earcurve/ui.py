@@ -316,7 +316,12 @@ class IntroPage(QWidget):
         start_row.addWidget(self.start_btn)
         start_row.addStretch(1)
         root.addLayout(start_row)
-        root.addSpacing(24)
+        root.addSpacing(14)
+        self.unofficial = QLabel(i18n.t("intro.unofficial"))
+        self.unofficial.setObjectName("footer")
+        self.unofficial.setAlignment(Qt.AlignmentFlag.AlignHCenter)
+        root.addWidget(self.unofficial)
+        root.addSpacing(14)
 
         self.start_btn.clicked.connect(self.started.emit)
         self.prefs.theme_selected.connect(self.theme_selected.emit)
@@ -401,6 +406,7 @@ class IntroPage(QWidget):
         self.lines[1].setText(i18n.t("intro.line2"))
         self.lines[2].setText(i18n.t("intro.line3"))
         self.start_btn.setText(i18n.t("intro.start"))
+        self.unofficial.setText(i18n.t("intro.unofficial"))
         self.prefs.retranslate(i18n)
 
 

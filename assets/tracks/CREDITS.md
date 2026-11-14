@@ -21,3 +21,12 @@ Each excerpt was trimmed, loudness-normalised, faded and re-encoded at
 FreePD.com was a public-domain music catalog; its site has closed and the
 mirror above preserves the files. Track-level credits come from the
 original ID3 tags and the FreePD catalog.
+
+## Takedown / corrections
+
+If you are a rights holder and believe an excerpt is misattributed or is not
+actually CC0, please open an issue at
+https://github.com/Realeek/EarCurve/issues with the track filename and
+supporting information. The maintainer will remove or replace the excerpt
+promptly. 如果你是权利人并认为某段音频署名有误或并非 CC0，请附上文件名与
+证明材料在 GitHub Issues 中提出，我们会尽快移除或替换。

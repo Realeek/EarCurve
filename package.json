@@ -1,8 +1,8 @@
 {
   "name": "earcurve",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
-  "description": "A dedicated EQ companion for the DARKRIM (CunYuan YingShi) headphone driver: hearing-threshold measurement, blind A/B tuning, and driver-ready JSON export.",
+  "description": "Darkrim Shadow (DARKRIM SHADOW / 寸渊影弑) custom EQ tool: per-ear hearing tests, blind A/B tuning, and driver-ready parametric EQ JSON export.",
   "license": "MIT",
   "scripts": {
     "test": "node test/eq.test.js"

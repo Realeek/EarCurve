@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "earcurve"
-version = "0.1.0"
-description = "A dedicated EQ companion for the DARKRIM (CunYuan YingShi) headphone driver."
+version = "0.1.1"
+description = "Darkrim Shadow (DARKRIM SHADOW / 寸渊影弑) custom EQ tool with per-ear hearing tests, blind A/B tuning, and parametric EQ export."
 readme = "README.md"
 requires-python = ">=3.10"
 license = { text = "MIT" }

@@ -22,8 +22,8 @@ EarCurve 是一款面向 **寸渊影弑（DARKRIM SHADOW）** 耳机的**自定�
 
 优先使用 GitHub Releases 中的 Windows 成品：
 
-- `EarCurve-DarkrimShadow-0.1.0-windows-x64.exe`：单文件便携版，首次启动会解压，约 55 MB。
-- `EarCurve-DarkrimShadow-0.1.0-windows-x64-onedir.zip`：解压目录版，启动更快，约 134 MB。
+- `EarCurve-DarkrimShadow-0.1.1-windows-x64.exe`：单文件便携版，首次启动会解压，约 55 MB。
+- `EarCurve-DarkrimShadow-0.1.1-windows-x64-onedir.zip`：解压目录版，启动更快，约 134 MB。
 
 下载地址：[Releases](https://github.com/Realeek/EarCurve/releases/latest)
 
@@ -299,6 +299,8 @@ python scripts/build_desktop.py  # 打包 onefile + onedir
 
 EarCurve 是为寸渊影弑（DARKRIM SHADOW）驱动开发的第三方辅助工具，与 DARKRIM 品牌方无关，非官方产品。工具仅用于个人听感调整，不是医疗设备，不能用于听力诊断。使用任何 EQ 或高音量播放造成的风险由使用者自行承担。
 
+**商标声明**：DARKRIM、Darkrim Shadow、寸渊影弑、DTS、Dolby、Windows 等名称均为其各自权利人的商标或注册商标。本项目仅以这些名称说明兼容性，与相关品牌方无关联，也未获得其背书。
+
 ### 内置曲库与素材许可
 
 - `assets/tracks/` 中的 8 段试听音频来自 FreePD 公共领域曲库，以 **CC0 1.0** 释出；已做 25 秒剪辑、响度归一化、淡入淡出与 128 kbps 立体声重编码。完整来源、作者与原始文件名见 [assets/tracks/CREDITS.md](assets/tracks/CREDITS.md)，许可原文见 [assets/tracks/CC0-1.0.txt](assets/tracks/CC0-1.0.txt)。
@@ -307,7 +309,7 @@ EarCurve 是为寸渊影弑（DARKRIM SHADOW）驱动开发的第三方辅助工
 
 ### License
 
-代码与文档：[MIT](LICENSE)。内置曲库：[CC0 1.0](assets/tracks/CC0-1.0.txt)。
+代码与文档：[MIT](LICENSE)。内置曲库：[CC0 1.0](assets/tracks/CC0-1.0.txt)。第三方组件与 LGPL 声明：[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
 
 ---
 
@@ -325,8 +327,8 @@ EarCurve is a **Darkrim Shadow (寸渊影弑) custom EQ tool**: it measures per-
 
 Use the Windows builds from GitHub Releases:
 
-- `EarCurve-DarkrimShadow-0.1.0-windows-x64.exe`: portable single-file build, extracted on first launch, about 55 MB.
-- `EarCurve-DarkrimShadow-0.1.0-windows-x64-onedir.zip`: unpacked folder build, faster startup, about 134 MB.
+- `EarCurve-DarkrimShadow-0.1.1-windows-x64.exe`: portable single-file build, extracted on first launch, about 55 MB.
+- `EarCurve-DarkrimShadow-0.1.1-windows-x64-onedir.zip`: unpacked folder build, faster startup, about 134 MB.
 
 Downloads: [Releases](https://github.com/Realeek/EarCurve/releases/latest)
 
@@ -602,6 +604,8 @@ Desktop audio uses `sounddevice` (PortAudio) for output and `soundfile` for deco
 
 EarCurve is an unofficial companion tool for the Darkrim Shadow (DARKRIM SHADOW) driver and is not affiliated with the brand. It is for personal listening adjustment only, not a medical device, and must not be used for hearing diagnosis. You assume all risks from EQ use or high-volume playback.
 
+**Trademark notice**: DARKRIM, Darkrim Shadow, 寸渊影弑, DTS, Dolby, Windows, and other names are trademarks or registered trademarks of their respective owners. EarCurve uses these names only to describe compatibility and is not affiliated with or endorsed by those owners.
+
 ### Bundled library and asset licenses
 
 - The eight excerpts in `assets/tracks/` come from the FreePD public-domain catalog and are released under **CC0 1.0**. They were trimmed to 25 seconds, loudness-normalized, faded, and re-encoded at 128 kbps stereo. Sources, artists, and original filenames are listed in [assets/tracks/CREDITS.md](assets/tracks/CREDITS.md); the license text is in [assets/tracks/CC0-1.0.txt](assets/tracks/CC0-1.0.txt).
@@ -610,4 +614,4 @@ EarCurve is an unofficial companion tool for the Darkrim Shadow (DARKRIM SHADOW)
 
 ### License
 
-Code and documentation: [MIT](LICENSE). Bundled tracks: [CC0 1.0](assets/tracks/CC0-1.0.txt).
+Code and documentation: [MIT](LICENSE). Bundled tracks: [CC0 1.0](assets/tracks/CC0-1.0.txt). Third-party components and LGPL notices: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

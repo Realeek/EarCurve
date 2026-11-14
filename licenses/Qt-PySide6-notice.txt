@@ -1,0 +1,27 @@
+Qt / PySide6 notice
+===================
+
+PySide6, shiboken6, and Qt 6 are Copyright (C) The Qt Company Ltd.
+and contributors.
+
+PySide6 is available under the LGPLv3, GPLv3, or a commercial license.
+This application is distributed with the LGPLv3 option. See:
+
+  licenses/LGPL-3.0.txt
+  licenses/GPL-3.0.txt
+
+Qt corresponding source:
+  https://code.qt.io/cgit/qt/
+  https://code.qt.io/cgit/pyside/pyside-setup.git/
+
+Qt third-party license notices are maintained by the Qt project:
+  https://code.qt.io/cgit/qt/qtbase.git/tree/LICENSES
+
+The onedir distribution keeps the Qt/PySide6 shared libraries as separate
+files under `_internal/PySide6`, so they can be replaced with a compatible
+build. The onefile distribution is provided as a convenience; use the
+onedir distribution if you need to replace the LGPL libraries.
+
+The complete corresponding source for the LGPL-covered components can be
+obtained from the upstream links above or requested from the EarCurve
+maintainer through GitHub Issues for three years after distribution.

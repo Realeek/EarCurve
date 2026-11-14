@@ -5,7 +5,8 @@ from __future__ import annotations
 STRINGS: dict[str, dict[str, str]] = {
     "zh": {
         "app.name": "EarCurve",
-        "app.tag": "DARKRIM 专用",
+        "app.tag": "非官方 · DARKRIM 专用",
+        "intro.unofficial": "非官方辅助工具 · 与 DARKRIM 品牌方无关联",
         "intro.kicker": "FOR DARKRIM · 寸渊影弑专用",
         "intro.line1": "基于双耳听阈测试生成补偿曲线",
         "intro.line2": "通过盲听对比收敛至个人偏好",
@@ -180,7 +181,8 @@ STRINGS: dict[str, dict[str, str]] = {
     },
     "en": {
         "app.name": "EarCurve",
-        "app.tag": "For DARKRIM",
+        "app.tag": "Unofficial · For DARKRIM",
+        "intro.unofficial": "Unofficial companion · not affiliated with DARKRIM",
         "intro.kicker": "FOR DARKRIM · CUNYUAN YINGSHI",
         "intro.line1": "Compensation curve from per-ear hearing tests",
         "intro.line2": "Converges on your preference through blind comparisons",
