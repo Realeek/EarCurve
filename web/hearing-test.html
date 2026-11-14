@@ -1,0 +1,594 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="EarCurve — a dedicated EQ companion for the DARKRIM (CunYuan YingShi) headphone driver.">
+<meta name="theme-color" content="#0b0b10">
+<title data-i18n="hearing.title">听阈测试 · EarCurve</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/icon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../assets/icon-180.png">
+<script src="js/theme.js"></script>
+<script src="js/i18n.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="index.html"><img class="brand-mark" src="../assets/icon-32.png" alt="" width="24" height="24">EarCurve</a>
+  <span class="tag" data-i18n="hearing.tag">工具一 · 听阈测试</span>
+  <span class="spacer"></span>
+  <a href="ab-tuner.html" class="small" data-i18n="common.nextTuning">下一步：盲听微调 →</a>
+</header>
+
+<main class="wrap narrow">
+
+  <!-- ========== 准备 ========== -->
+  <section id="view-prepare">
+    <div class="card">
+      <h1 data-i18n="hearing.h1">分耳听阈测试</h1>
+      <p class="muted" data-i18n="hearing.intro">
+        每个频段循环播放测试音。把音量调到刚好能听见（听阈）后确认，工具据此计算补偿曲线。
+        左右耳各 10 个频段，约 8–12 分钟。
+      </p>
+
+      <div class="notice danger" style="margin-top:14px" data-i18n="hearing.danger">
+        测试期间请使用舒适音量。如出现不适，立即停止。
+      </div>
+      <div class="notice warn" style="margin-top:10px" data-i18n="hearing.warn">
+        开始前请确认：耳机通过 2.4G 接收器连接电脑；打开驱动 EQ 调音台，进入「自定义 1」，
+        把 10 个调节点全部调到 0 dB（主增益设为 0）。点击「重置(官方默认EQ)」后，曲线应位于 0 dB 基线；
+        若官方默认含调音，请新建全 0 曲线并应用。关闭空间音效（DTS、Windows Sonic 等）、
+        Realtek 增强及播放器音效。
+      </div>
+
+      <h3 data-i18n="hearing.checkTitle">开始前逐项确认</h3>
+      <div class="checklist">
+        <label class="check"><input type="checkbox" data-check>
+          <div><b data-i18n="hearing.check1Title">耳机已通过 2.4G 连接电脑</b><br><span data-i18n="hearing.check1Body">蓝牙模式下驱动不可用。确认接收器连接稳定，驱动显示已连接。</span></div>
+        </label>
+        <label class="check"><input type="checkbox" data-check>
+          <div><b data-i18n="hearing.check2Title">驱动 EQ 已全平直</b><br><span data-i18n="hearing.check2Body">打开「自定义 1」，把 10 个调节点都调到 0 dB；曲线应为 0 dB 直线。若官方默认含调音，请新建全 0 曲线并应用。</span></div>
+        </label>
+        <label class="check"><input type="checkbox" data-check>
+          <div><b data-i18n="hearing.check3Title">音效已关闭</b><br><span data-i18n="hearing.check3Body">关闭空间音效（DTS、Windows Sonic 等）、Realtek 增强及播放器音效。</span></div>
+        </label>
+        <label class="check"><input type="checkbox" data-check>
+          <div><b data-i18n="hearing.check4Title">耳机佩戴正常</b><br><span data-i18n="hearing.check4Body">L 侧对应左耳，耳罩贴合，测试过程中不要移动。</span></div>
+        </label>
+        <label class="check"><input type="checkbox" data-check>
+          <div><b data-i18n="hearing.check5Title">环境安静、音量固定</b><br><span data-i18n="hearing.check5Body">用系统音量将参考音调整至响度适中且无不适；开测后保持系统音量不变。</span></div>
+        </label>
+      </div>
+
+      <div class="row" style="margin-top:6px">
+        <button class="btn" id="btn-ref-tone" data-i18n="hearing.refButton">播放 1kHz 参考音（双耳）</button>
+        <span class="status" id="ref-status" aria-live="polite" data-i18n="hearing.refStatusIdle">用于校准测试音量上限</span>
+      </div>
+
+      <div class="row" style="margin-top:18px">
+        <label class="small muted" for="output-select" data-i18n="hearing.outputLabel">输出设备</label>
+        <select id="output-select"><option value="" data-i18n="hearing.systemDefault">系统默认</option></select>
+        <span class="tiny muted" data-i18n="hearing.outputHint">若切换无效，请在 Windows 声音设置里把耳机设为默认输出</span>
+      </div>
+
+      <div class="row spread" style="margin-top:22px">
+        <div class="row">
+          <button class="btn" id="btn-resume" disabled>继续上次测试</button>
+          <button class="btn ghost" id="btn-last" disabled data-i18n="hearing.lastResult">查看上次结果</button>
+        </div>
+        <button class="btn primary big" id="btn-start" data-i18n="hearing.startLeft">开始测试（左耳）</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 测试 ========== -->
+  <section id="view-test" class="hidden">
+    <div class="card">
+      <div class="row spread">
+        <span class="ear-badge" id="ear-badge">左耳</span>
+        <span class="small muted" id="test-progress">第 1 / 10 个频段</span>
+      </div>
+      <div class="progress-line" style="margin-top:12px"><i id="test-progress-bar"></i></div>
+
+      <div class="freq-display"><span id="freq-value">630</span> <small>Hz</small></div>
+      <p class="center muted small" id="test-tip" data-i18n="hearing.tip">
+        每个频段自动循环播放测试音。把滑块从声音较大处慢慢往下拖，直到再低一档就听不见（听阈），
+        再回调至刚好能听见。若某一档后声音突然完全消失，属 2.4G 链路静音门限（noise gate），
+        并非听力阈值。
+      </p>
+
+      <div class="slider-wrap">
+        <input type="range" id="level-slider" min="-70" max="0" step="1" value="-20">
+        <div class="level-readout">
+          <span data-i18n="hearing.quiet">安静</span>
+          <span><span data-i18n="hearing.levelLabel">数字衰减：</span><b id="level-value">-20 dB</b></span>
+          <span data-i18n="hearing.loud">响</span>
+        </div>
+      </div>
+      <p class="tiny muted center hidden" id="gate-warning" data-i18n="hearing.gateWarning">
+        已接近 2.4G 链路静音门限：继续下调会突然无声，并非听力阈值。
+        请在最后一档还能听见的位置确认；仅在完全听不见时选择「完全听不见」。
+      </p>
+
+      <div class="row" style="justify-content:center; gap:16px">
+        <button class="btn primary big" id="btn-confirm" data-i18n="hearing.confirm">确认该音量为听阈</button>
+      </div>
+      <div class="row" style="justify-content:center; margin-top:14px">
+        <button class="btn ghost danger" id="btn-cannot" data-i18n="hearing.cannot">完全听不见</button>
+        <button class="btn ghost" id="btn-prev" data-i18n="hearing.prev">上一段</button>
+      </div>
+
+      <div class="verify-panel hidden" id="verify-panel">
+        <p style="margin-top:0" data-i18n="hearing.verifyText">请用相同音量复听，确认是否处于听阈。</p>
+        <div class="row" style="justify-content:center">
+          <button class="btn primary" id="btn-verify-yes" data-i18n="hearing.verifyYes">确认记录</button>
+          <button class="btn" id="btn-verify-no" data-i18n="hearing.verifyNo">未听见，提高 3 dB</button>
+          <button class="btn ghost" id="btn-verify-back" data-i18n="hearing.verifyBack">返回调整</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========== 结果 ========== -->
+  <section id="view-results" class="hidden">
+    <div class="card">
+      <h1 data-i18n="hearing.resultsTitle">测试结果</h1>
+      <p class="muted small" id="result-summary" aria-live="polite"></p>
+      <canvas class="curve" id="result-canvas"></canvas>
+      <div class="row" style="margin-top:16px">
+        <label class="small muted" for="k-slider" data-i18n="hearing.kLabel">补偿强度 k</label>
+        <input type="range" class="k-slider" id="k-slider" min="0.5" max="1" step="0.05" value="0.7">
+        <span class="small" id="k-value">0.70</span>
+        <span class="tiny muted" data-i18n="hearing.kNote">k 越大越接近实测听阈。听阈法易产生过度补偿，默认 0.7。</span>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="hearing.detailTitle">数值明细</h2>
+      <table class="data">
+        <thead>
+          <tr>
+            <th data-i18n="hearing.thFreq">频段</th>
+            <th data-i18n="hearing.thLeft">左耳阈值</th>
+            <th data-i18n="hearing.thRight">右耳阈值</th>
+            <th data-i18n="hearing.thDev">相对 1kHz 偏差</th>
+            <th data-i18n="hearing.thGain">增益</th>
+          </tr>
+        </thead>
+        <tbody id="result-table"></tbody>
+      </table>
+      <p class="tiny muted" style="margin-top:10px">
+        <span data-i18n="hearing.tableNoteA">阈值为数字衰减量，数值越负表示该频段越灵敏；正偏差表示相对迟钝，将获得正增益。主增益 </span><span id="main-gain-text">0</span><span data-i18n="hearing.tableNoteB"> dB，用于预留防削波余量。</span>
+      </p>
+    </div>
+
+    <div class="card">
+      <h2 data-i18n="hearing.importTitle">导入驱动</h2>
+      <div class="row">
+        <button class="btn primary" id="btn-export-music" data-i18n="hearing.exportMusic">导出音乐曲线 JSON</button>
+        <button class="btn" id="btn-export-movie" data-i18n="hearing.exportMovie">生成影视版（自定义 2）</button>
+      </div>
+      <ol class="small muted" style="margin:14px 0 0; padding-left:20px">
+        <li data-i18n="hearing.import1">使用 2.4G 连接耳机并打开驱动，进入 EQ 调音台的「自定义」页。</li>
+        <li data-i18n="hearing.import2">选择「自定义 1」，点击「导入」，选择 <b>darkrim-eq-music.json</b>。</li>
+        <li data-i18n="hearing.import3">对照本页曲线，确认形状一致。</li>
+        <li data-i18n="hearing.import4">在驱动中上传云端，并在手机 App 中手动应用该曲线；未应用时手机端仍使用原设置。</li>
+        <li data-i18n="hearing.import5">影视场景：将影视版曲线导入「自定义 2」，启用空间音效后使用。</li>
+      </ol>
+      <div class="notice" style="margin-top:14px" data-i18n="hearing.phoneNotice">
+        电脑端使用 2.4G 链路，手机端使用蓝牙，两者的编解码与放大链路不同；手机系统的 Dolby Atmos、耳机音效还会做二次处理。
+        因此，电脑端测得的曲线在手机上仅可作为初始参考。建议在手机端试听后单独调整。
+      </div>
+      <div class="row" style="margin-top:16px">
+        <button class="btn ghost" id="btn-restart" data-i18n="hearing.restart">全部重测</button>
+        <a class="btn ghost" href="ab-tuner.html" data-i18n="hearing.nextLink">继续：盲听微调</a>
+      </div>
+    </div>
+  </section>
+
+  <p class="footer-note" data-i18n="common.disclaimer">EarCurve 是寸渊影弑（DARKRIM）驱动的第三方辅助工具，非官方产品。仅用于个人听感调整，不是医疗设备，不能用于听力诊断。</p>
+</main>
+
+<script src="js/eq.js"></script>
+<script src="js/audio-engine.js"></script>
+<script src="js/exit-guard.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var STORE_PROGRESS = 'darkrim.eq.progress.v1';
+  var STORE_RESULT = 'darkrim.eq.hearing.v1';
+
+  var state = null;
+  var computed = null;
+  var verifying = false;
+  var level = -20;
+  var refPlaying = false;
+
+  function $(id) { return document.getElementById(id); }
+  function T(key, vars) { return (window.I18N && window.I18N.t) ? window.I18N.t(key, vars) : key; }
+  function isNum(v) { return typeof v === 'number' && isFinite(v); }
+  function freqLabel(f) { return f >= 1000 ? (f / 1000) + 'k' : String(f); }
+  function signed(v, digits) {
+    var r = EQ.round1(v);
+    return (r > 0 ? '+' : '') + (digits ? r.toFixed(digits) : String(r));
+  }
+
+  function show(id) {
+    ['view-prepare', 'view-test', 'view-results'].forEach(function (v) {
+      $(v).classList.add('hidden');
+    });
+    $(id).classList.remove('hidden');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  /* ---------- 输出设备 ---------- */
+  function initOutputs() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) return;
+    AudioEngine.listOutputs().then(function (devices) {
+      var sel = $('output-select');
+      devices.forEach(function (d, i) {
+        var opt = document.createElement('option');
+        opt.value = d.deviceId;
+        opt.textContent = d.label || T('hearing.outputFallback', { n: i + 1 });
+        sel.appendChild(opt);
+      });
+    });
+  }
+
+  $('output-select').addEventListener('change', function () {
+    var sel = this;
+    AudioEngine.setOutputDevice(sel.value).then(function (ok) {
+      if (!ok) {
+        alert(T('hearing.alertOutput'));
+        sel.value = '';
+      }
+    });
+  });
+
+  /* ---------- 参考音 ---------- */
+  $('btn-ref-tone').addEventListener('click', function () {
+    if (refPlaying) {
+      AudioEngine.stopTone();
+      refPlaying = false;
+      this.textContent = T('hearing.refButton');
+      $('ref-status').textContent = T('hearing.refStatusIdle');
+      return;
+    }
+    AudioEngine.ensureContext()
+      .then(function () { return AudioEngine.startTone(1000, 'both', 0, { mode: 'steady' }); })
+      .then(function () {
+        refPlaying = true;
+        $('btn-ref-tone').textContent = T('hearing.refStop');
+        $('ref-status').textContent = T('hearing.refStatusPlaying');
+      })
+      .catch(function (e) { alert(e.message); });
+  });
+
+  /* ---------- 进度存取 ---------- */
+  function newState() {
+    return {
+      ear: 'L',
+      index: 0,
+      order: { L: EQ.shuffle(EQ.BANDS.slice()), R: EQ.shuffle(EQ.BANDS.slice()) },
+      thresholds: { L: {}, R: {} }
+    };
+  }
+
+  function loadProgress() {
+    var p = EQ.store.get(STORE_PROGRESS, null);
+    if (!p || !p.order || !p.thresholds) return null;
+    if (!Array.isArray(p.order.L) || p.order.L.length !== 10) return null;
+    if (!Array.isArray(p.order.R) || p.order.R.length !== 10) return null;
+    return p;
+  }
+
+  function saveProgress() {
+    EQ.store.set(STORE_PROGRESS, state);
+  }
+
+  function currentFreq() {
+    return state.order[state.ear][state.index];
+  }
+
+  /* ---------- 测试流程 ---------- */
+  function stopToneIfAny() {
+    if (AudioEngine.isTonePlaying()) AudioEngine.stopTone();
+  }
+
+  function startBandTone() {
+    AudioEngine.startTone(currentFreq(), state.ear, level, { mode: 'burst' })
+      .catch(function (e) { alert(T('hearing.alertTone', { msg: e.message })); });
+  }
+
+  function updateGateWarning() {
+    $('gate-warning').classList.toggle('hidden', level > -60);
+  }
+
+  function beginTest(fresh) {
+    refPlaying = false;
+    $('btn-ref-tone').textContent = T('hearing.refButton');
+    if (fresh) state = newState();
+    verifying = false;
+    show('view-test');
+    renderBand();
+  }
+
+  function renderBand() {
+    document.body.setAttribute('data-dirty', '1');
+    verifying = false;
+    $('verify-panel').classList.add('hidden');
+    $('btn-confirm').disabled = false;
+    $('btn-cannot').disabled = false;
+    $('btn-prev').disabled = false;
+    $('level-slider').disabled = false;
+
+    level = -20;
+    $('level-slider').value = String(level);
+    $('level-value').textContent = level + ' dB';
+    updateGateWarning();
+
+    var earName = state.ear === 'L' ? T('hearing.earLeft') : T('hearing.earRight');
+    $('ear-badge').textContent = earName;
+    $('test-progress').textContent = T('hearing.progress', { n: state.index + 1 });
+    $('test-progress-bar').style.width = (((state.ear === 'L' ? 0 : 10) + state.index) / 20 * 100) + '%';
+    var f = currentFreq();
+    $('freq-value').textContent = freqLabel(f);
+
+    stopToneIfAny();
+    saveProgress();
+    startBandTone();
+  }
+
+  $('level-slider').addEventListener('input', function () {
+    level = Number(this.value);
+    $('level-value').textContent = level + ' dB';
+    updateGateWarning();
+    if (AudioEngine.isTonePlaying()) AudioEngine.setToneLevel(level);
+  });
+
+  $('btn-confirm').addEventListener('click', function () {
+    enteringVerify();
+  });
+
+  function enteringVerify() {
+    verifying = true;
+    $('verify-panel').classList.remove('hidden');
+    $('btn-confirm').disabled = true;
+    $('btn-prev').disabled = true;
+    $('level-slider').disabled = true;
+    if (!AudioEngine.isTonePlaying()) startBandTone();
+  }
+
+  $('btn-verify-yes').addEventListener('click', function () {
+    recordLevel(level);
+  });
+
+  $('btn-verify-no').addEventListener('click', function () {
+    level = Math.min(0, level + 3);
+    $('level-slider').value = String(level);
+    $('level-value').textContent = level + ' dB';
+    updateGateWarning();
+    if (!AudioEngine.isTonePlaying()) startBandTone();
+    else AudioEngine.setToneLevel(level);
+  });
+
+  $('btn-verify-back').addEventListener('click', function () {
+    verifying = false;
+    $('verify-panel').classList.add('hidden');
+    $('btn-confirm').disabled = false;
+    $('btn-prev').disabled = false;
+    $('level-slider').disabled = false;
+    if (!AudioEngine.isTonePlaying()) startBandTone();
+  });
+
+  $('btn-cannot').addEventListener('click', function () {
+    recordLevel(null);
+  });
+
+  function recordLevel(value) {
+    stopToneIfAny();
+    state.thresholds[state.ear][currentFreq()] = value;
+    nextBand();
+  }
+
+  function nextBand() {
+    verifying = false;
+    state.index++;
+    if (state.index >= 10) {
+      if (state.ear === 'L') {
+        state.ear = 'R';
+        state.index = 0;
+      } else {
+        finish();
+        return;
+      }
+    }
+    saveProgress();
+    renderBand();
+  }
+
+  $('btn-prev').addEventListener('click', function () {
+    if (verifying) return;
+    stopToneIfAny();
+    if (state.index > 0) {
+      state.index--;
+    } else if (state.ear === 'R') {
+      state.ear = 'L';
+      state.index = 9;
+    } else {
+      return;
+    }
+    renderBand();
+  });
+
+  /* ---------- 计算曲线 ---------- */
+  function referenceFor(ear) {
+    var t = state.thresholds[ear];
+    if (isNum(t[1000])) return t[1000];
+    var vals = EQ.BANDS.map(function (f) { return t[f]; }).filter(isNum);
+    if (!vals.length) return null;
+    vals.sort(function (a, b) { return a - b; });
+    return vals[Math.floor(vals.length / 2)];
+  }
+
+  function compute(k) {
+    var refs = { L: referenceFor('L'), R: referenceFor('R') };
+    var rows = EQ.BANDS.map(function (f) {
+      var ds = [];
+      ['L', 'R'].forEach(function (ear) {
+        var t = state.thresholds[ear][f];
+        if (isNum(t) && isNum(refs[ear])) ds.push(t - refs[ear]);
+      });
+      return { freq: f, d: ds.length ? EQ.mean(ds) : null, missing: ds.length === 0 };
+    });
+    var valid = rows.filter(function (r) { return r.d !== null; }).map(function (r) { return r.d; });
+    var fill = valid.length ? Math.max.apply(null, valid) + 6 : 10;
+    rows.forEach(function (r) { if (r.d === null) r.d = fill; });
+    var gains = rows.map(function (r) { return EQ.round1(EQ.clamp(k * r.d, -12, 12)); });
+    gains[EQ.BANDS.indexOf(1000)] = 0;
+    var maxGain = Math.max.apply(null, gains);
+    var mainGain = maxGain > 0 ? Math.max(-12, -Math.ceil(maxGain) - 1) : 0;
+    return { rows: rows, gains: gains, mainGain: mainGain, refs: refs };
+  }
+
+  function movieCurve(music) {
+    var add = { 40: 2, 80: 2, 2000: 1.5, 4000: 1 };
+    var c = EQ.flatCurve(EQ.CURVE_MOVIE);
+    c.bands.forEach(function (b, i) {
+      var g = EQ.clamp(music.bands[i].gain * 0.3, -4, 4) + (add[b.freq] || 0);
+      b.gain = EQ.round1(EQ.clamp(g, -12, 12));
+    });
+    c.mainGain = -6;
+    return c;
+  }
+
+  function renderResults() {
+    document.body.setAttribute('data-dirty', '1');
+    var k = Number($('k-slider').value);
+    $('k-value').textContent = k.toFixed(2);
+    computed = compute(k);
+    computed.curve = EQ.makeCurve(EQ.CURVE_MUSIC, computed.gains, computed.mainGain);
+    computed.movie = movieCurve(computed.curve);
+
+    var refL = computed.refs.L, refR = computed.refs.R;
+    $('result-summary').textContent = T('hearing.summary', {
+      l: isNum(refL) ? refL + ' dB' : T('hearing.invalid'),
+      r: isNum(refR) ? refR + ' dB' : T('hearing.invalid')
+    });
+
+    EQ.drawCurve($('result-canvas'), [
+      { curve: computed.curve, color: EQ.cssVar('--accent-2', '#a78bfa'), width: 2.5 }
+    ]);
+
+    var tbody = $('result-table');
+    tbody.innerHTML = '';
+    EQ.BANDS.forEach(function (f, i) {
+      var lt = state.thresholds.L[f];
+      var rt = state.thresholds.R[f];
+      var row = document.createElement('tr');
+      var cells = [
+        freqLabel(f) + ' Hz',
+        isNum(lt) ? lt + ' dB' : T('hearing.unheard'),
+        isNum(rt) ? rt + ' dB' : T('hearing.unheard'),
+        computed.rows[i].missing ? '按上限 +6 处理' : signed(computed.rows[i].d, 1),
+        signed(computed.gains[i])
+      ];
+      cells.forEach(function (text, idx) {
+        var td = document.createElement('td');
+        td.textContent = text;
+        if (idx === 4) td.className = computed.gains[i] >= 0 ? 'gain-pos' : 'gain-neg';
+        row.appendChild(td);
+      });
+      tbody.appendChild(row);
+    });
+
+    $('main-gain-text').textContent = String(computed.mainGain);
+
+    EQ.store.set(STORE_RESULT, {
+      savedAt: Date.now(),
+      k: k,
+      thresholds: state.thresholds,
+      curve: EQ.toDriverJSON(computed.curve)
+    });
+  }
+
+  function finish() {
+    EQ.store.remove(STORE_PROGRESS);
+    show('view-results');
+    renderResults();
+  }
+
+  $('k-slider').addEventListener('input', function () {
+    if (computed) renderResults();
+  });
+
+  $('btn-export-music').addEventListener('click', function () {
+    if (!computed) return;
+    EQ.downloadJSON(EQ.toDriverJSON(computed.curve), 'darkrim-eq-music.json');
+  });
+
+  $('btn-export-movie').addEventListener('click', function () {
+    if (!computed) return;
+    EQ.downloadJSON(EQ.toDriverJSON(computed.movie), 'darkrim-eq-movie.json');
+  });
+
+  $('btn-restart').addEventListener('click', function () {
+    if (!confirm(T('hearing.restartConfirm'))) return;
+    EQ.store.remove(STORE_PROGRESS);
+    state = null;
+    computed = null;
+    document.body.removeAttribute('data-dirty');
+    $('btn-resume').disabled = true;
+    var lastResult = EQ.store.get(STORE_RESULT, null);
+    if (lastResult && lastResult.thresholds) $('btn-last').disabled = false;
+    show('view-prepare');
+  });
+
+  /* ---------- 启动 ---------- */
+  $('btn-start').addEventListener('click', function () {
+    AudioEngine.ensureContext()
+      .then(function () {
+        if (AudioEngine.isTonePlaying()) AudioEngine.stopTone();
+        beginTest(true);
+      })
+      .catch(function (e) { alert(e.message); });
+  });
+
+  $('btn-resume').addEventListener('click', function () {
+    var saved = loadProgress();
+    if (!saved) { alert(T('hearing.noProgress')); return; }
+    state = saved;
+    AudioEngine.ensureContext().then(function () { beginTest(false); });
+  });
+
+  $('btn-last').addEventListener('click', function () {
+    var saved = EQ.store.get(STORE_RESULT, null);
+    if (!saved || !saved.thresholds) return;
+    state = {
+      ear: 'L',
+      index: 0,
+      order: { L: EQ.BANDS.slice(), R: EQ.BANDS.slice() },
+      thresholds: saved.thresholds
+    };
+    if (isNum(saved.k)) $('k-slider').value = String(saved.k);
+    show('view-results');
+    renderResults();
+  });
+
+  initOutputs();
+
+  var saved = loadProgress();
+  if (saved) {
+    $('btn-resume').disabled = false;
+    var earName = saved.ear === 'L' ? T('hearing.earLeft') : T('hearing.earRight');
+    $('btn-resume').textContent = T('hearing.resumeAt', { ear: earName, index: saved.index + 1 });
+  }
+
+  var lastResult = EQ.store.get(STORE_RESULT, null);
+  if (lastResult && lastResult.thresholds) $('btn-last').disabled = false;
+})();
+</script>
+</body>
+</html>

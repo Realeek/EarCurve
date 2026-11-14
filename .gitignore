@@ -1,0 +1,31 @@
+# 测试与临时产物
+.chrome-*/
+.shots/
+*.log
+
+# 系统/编辑器
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Node 侧（网页版无运行时依赖，仅防御）
+node_modules/
+
+# Python / 桌面版
+__pycache__/
+*.py[cod]
+.pytest_cache/
+*.egg-info/
+.venv/
+.venv-build/
+.venv-ess/
+.venv-clean/
+build/
+build-clean/
+dist/
+dist-clean/
+*.spec
+
+# 本地个人配置，不提交到公开仓库
+.claude/

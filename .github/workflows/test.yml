@@ -1,0 +1,30 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  web-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Run web logic tests
+        run: node test/eq.test.js
+
+  core-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pytest
+        run: python -m pip install pytest
+      - name: Run desktop EQ core tests
+        env:
+          PYTHONPATH: src
+        run: python -m pytest test/test_core_eq.py test/test_core_hearing.py test/test_core_tuning.py test/test_tracks.py -q

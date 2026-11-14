@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="EarCurve — a dedicated EQ companion for the DARKRIM (CunYuan YingShi) headphone driver.">
+<meta name="theme-color" content="#0b0b10">
+<title data-i18n="index.title">EarCurve</title>
+<link rel="icon" type="image/png" sizes="32x32" href="../assets/icon-32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="../assets/icon-16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="../assets/icon-180.png">
+<script src="js/theme.js"></script>
+<script src="js/i18n.js"></script>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="intro" id="intro">
+  <div class="intro-prefs">
+    <span class="intro-prefs-label" data-i18n="common.themeLabel">主题颜色：</span>
+    <button type="button" class="theme-dot theme-dark" data-theme-choice="dark"
+            data-i18n-attr="aria-label:index.themeDark,title:index.themeDark"
+            aria-label="深色模式" title="深色模式"></button>
+    <button type="button" class="theme-dot theme-light" data-theme-choice="light"
+            data-i18n-attr="aria-label:index.themeLight,title:index.themeLight"
+            aria-label="浅色模式" title="浅色模式"></button>
+    <button type="button" class="lang-switch" id="lang-switch"
+            aria-label="简体中文/English">简体中文/English</button>
+  </div>
+  <div class="intro-glow" aria-hidden="true"></div>
+  <div class="intro-content">
+    <img class="intro-logo" src="../assets/icon-256.png" alt="" width="86" height="86">
+    <div class="intro-kicker" data-i18n="index.introKicker">FOR DARKRIM · 寸渊影弑专用</div>
+    <h1 class="intro-title">
+      <span class="intro-name">EarCurve</span>
+    </h1>
+    <p class="intro-line intro-line-1" data-i18n="index.introLine1">基于双耳听阈测试生成补偿曲线</p>
+    <p class="intro-line intro-line-2" data-i18n="index.introLine2">通过盲听对比收敛至个人偏好</p>
+    <p class="intro-line intro-line-3" data-i18n="index.introLine3">导出可直接导入驱动的 10 段参数 EQ</p>
+  </div>
+  <button class="intro-start" id="btn-enter" type="button" data-i18n="common.start">开始</button>
+</div>
+
+<header class="topbar">
+  <a class="brand" href="index.html"><img class="brand-mark" src="../assets/icon-32.png" alt="" width="24" height="24">EarCurve</a>
+  <span class="tag" data-i18n="common.localTag">本地离线工具</span>
+  <span class="spacer"></span>
+</header>
+
+<main class="wrap">
+  <div class="page-kicker" data-i18n="index.eyebrow">寸渊影弑 · DARKRIM 专用</div>
+  <h1 data-i18n="index.heroTitle">根据个人听感生成耳机 EQ</h1>
+  <p class="muted" style="max-width:720px" data-i18n="index.heroBody">
+    EarCurve 是寸渊影弑（DARKRIM）驱动的专用 EQ 工具：通过分耳听阈测试计算补偿曲线，
+    再以盲听 A/B 对比微调，最终导出可直接导入驱动的 10 段参数 EQ JSON。所有处理均在本机完成。
+  </p>
+
+  <div class="notice warn" style="margin-top:18px" data-i18n="index.notice">
+    测试前请确认：耳机通过 2.4G 接收器连接电脑；打开驱动 EQ 调音台，进入「自定义 1」，
+    将 10 个调节点全部调到 0 dB（主增益设为 0）；关闭空间音效（DTS、Windows Sonic 等）、
+    Realtek 音效增强及播放器音效；测试期间保持系统音量不变。
+  </div>
+
+  <div class="cards">
+    <a class="tool-card" href="hearing-test.html">
+      <div class="num">STEP 01</div>
+      <h3 data-i18n="index.step1Title">分耳听阈测试</h3>
+      <p data-i18n="index.step1Body">
+        逐频段播放测试音，把音量调到刚好能听见。左右耳各 10 个频段，
+        约 8–12 分钟，据此生成补偿曲线。
+      </p>
+    </a>
+    <a class="tool-card" href="ab-tuner.html">
+      <div class="num">STEP 02</div>
+      <h3 data-i18n="index.step2Title">盲听偏好微调</h3>
+      <p data-i18n="index.step2Body">
+        从本地曲库随机抽取片段，在等响度的两条曲线间进行盲选。
+        约 24 次比较后收敛至个人偏好。
+      </p>
+    </a>
+  </div>
+
+  <div class="card" style="margin-top:24px">
+    <h2 data-i18n="index.flowTitle">使用流程</h2>
+    <ol class="muted small" style="padding-left:20px; line-height:2">
+      <li data-i18n="index.flow1">使用 2.4G 接收器将耳机连接至电脑。蓝牙模式下驱动不可用。</li>
+      <li data-i18n="index.flow2">启动 EarCurve。</li>
+      <li data-i18n="index.flow3">完成分耳听阈测试，导出 <b>darkrim-eq-music.json</b>。</li>
+      <li data-i18n="index.flow4">在驱动 EQ 调音台的「自定义 1」中点击「导入」，选择该文件，并核对曲线形状。</li>
+      <li data-i18n="index.flow5">完成盲听微调，导出 <b>darkrim-eq-final.json</b>，导入覆盖自定义 1。</li>
+      <li data-i18n="index.flow6">在驱动中上传云端，并在手机 App 中应用同一曲线。</li>
+    </ol>
+  </div>
+
+  <div class="card">
+    <h2 data-i18n="index.phoneTitle">电脑与手机的听感差异</h2>
+    <p class="muted small" data-i18n="index.phoneBody">
+      电脑端使用 2.4G 链路，手机端使用蓝牙，两者的编解码与放大链路不同；
+      手机系统的 Dolby Atmos、耳机音效还会对信号做二次处理。
+      因此，电脑端测得的曲线在手机上仅可作为初始参考。建议在手机端实际试听后单独调整。
+    </p>
+  </div>
+
+  <div class="card">
+    <h2 data-i18n="index.movieTitle">影视场景</h2>
+    <p class="muted small" data-i18n="index.movieBody">
+      观看影片并启用空间音效时，建议使用工具一生成的 <b>darkrim-eq-movie.json</b>（导入自定义 2）。
+      该曲线适度提升低频与人声频段，并预留 6 dB 余量以避免削波。音乐与影视曲线分开存放，互不影响。
+    </p>
+  </div>
+
+  <p class="footer-note" data-i18n="common.disclaimer">
+    EarCurve 是寸渊影弑（DARKRIM）驱动的第三方辅助工具，非官方产品。仅用于个人听感调整，不是医疗设备，不能用于听力诊断。
+  </p>
+</main>
+
+<script>
+(function () {
+  'use strict';
+  var intro = document.getElementById('intro');
+  var btn = document.getElementById('btn-enter');
+  if (!intro || !btn) return;
+
+  var skipIntro = /[?&]home=1/.test(window.location.search);
+  if (skipIntro) intro.classList.add('hidden');
+  else document.body.classList.add('intro-lock');
+
+  var themeBtns = document.querySelectorAll('[data-theme-choice]');
+  function syncThemeDots() {
+    var current = window.EQTheme ? EQTheme.get() : 'dark';
+    themeBtns.forEach(function (b) {
+      var on = b.getAttribute('data-theme-choice') === current;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-pressed', on ? 'true' : 'false');
+    });
+  }
+  themeBtns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      if (window.EQTheme) EQTheme.set(b.getAttribute('data-theme-choice'));
+      syncThemeDots();
+    });
+  });
+  syncThemeDots();
+
+  var langBtn = document.getElementById('lang-switch');
+  function syncLangButton() {
+    if (!langBtn || !window.I18N) return;
+    var en = I18N.get() === 'en';
+    langBtn.setAttribute('aria-pressed', en ? 'true' : 'false');
+    langBtn.title = en ? 'Switch to 简体中文' : 'Switch to English';
+  }
+  if (langBtn) {
+    langBtn.addEventListener('click', function () {
+      if (window.I18N) I18N.toggle();
+      syncLangButton();
+    });
+    syncLangButton();
+  }
+  document.addEventListener('langchange', syncLangButton);
+
+  function enter() {
+    if (!intro || intro.classList.contains('leaving')) return;
+    intro.classList.add('leaving');
+    setTimeout(function () {
+      intro.classList.add('hidden');
+      document.body.classList.remove('intro-lock');
+      var h = document.querySelector('main h1');
+      if (h) {
+        h.setAttribute('tabindex', '-1');
+        h.focus({ preventScroll: true });
+      }
+    }, 620);
+  }
+
+  btn.addEventListener('click', enter);
+  document.addEventListener('keydown', function (e) {
+    if (intro.classList.contains('hidden') || intro.classList.contains('leaving')) return;
+    if (e.target && e.target.closest && e.target.closest('button, a, input, select, textarea')) return;
+    if (e.key === 'Enter' || e.code === 'Space') {
+      e.preventDefault();
+      enter();
+    }
+  });
+})();
+</script>
+</body>
+</html>
